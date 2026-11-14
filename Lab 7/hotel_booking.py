@@ -1,15 +1,68 @@
+
 def nights_stayed(days):
-    check_in, check_out = days.split('-')
-    return int(check_out) - int(check_in)
+    if not isinstance(days, str):
+        return None
+
+    parts = days.split('-')
+
+    if len(parts) != 2:
+        return None
+
+    check_in, check_out = parts
+
+    if not check_in.isdigit() or not check_out.isdigit():
+        return None
+
+    check_in = int(check_in)
+    check_out = int(check_out)
+
+    if not (1 <= check_in <= 31 and 1 <= check_out <= 31):
+        return None
+
+    if check_out <= check_in:
+        return None
+
+    return check_out - check_in
+
 
 def room_floor(room_code):
-    number = room_code.split('-')[1]
-    return int(number[0])
+    if not isinstance(room_code, str):
+        return None
+
+    parts = room_code.split('-')
+
+    if len(parts) != 2:
+        return None
+
+    floor_code, number = parts
+
+    if not floor_code.strip() or not number.isdigit():
+        return None
+
+    if len(number) != 3:
+        return None
+
+    floor = int(number[0])
+
+    if floor < 1:
+        return None
+
+    return floor
+
 
 def booking_label(names_csv):
+    if not isinstance(names_csv, str):
+        return None
+
     names = [n.strip() for n in names_csv.split(',')]
+
+    if not names or any(not name for name in names):
+        return None
+
     lead = names[0]
+
     return lead[0].upper() + lead[1:] + " +" + str(len(names) - 1)
+
 
 def main():
     print("==== Running nights_stayed ====")
@@ -26,6 +79,7 @@ def main():
     user_input = input("Enter guest names as CSV (e.g. ravi, priya): ")
     result = booking_label(user_input)
     print("Booking Label:", result)
+
 
 if __name__ == "__main__":
     main()
